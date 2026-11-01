@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="referrer" content="no-referrer">
 <meta name="robots" content="noindex">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-hMPcfRJmuGeG6pHKd2TP3OilRl8do+qeaNf+27LEbHU='; style-src 'sha256-Iqm7wLQO4FyyB6BKthZvAVm2kwvHgGjmuzlcvDUN6lA='; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-cRV7j86yo7A9EWeKyw/GS+UX3AHXTXrFxSJWRFS9Inc='; style-src 'sha256-Iqm7wLQO4FyyB6BKthZvAVm2kwvHgGjmuzlcvDUN6lA='; base-uri 'none'; form-action 'none'">
 <title>Orion · Telefonu bağla</title>
 <style>
 html,body{margin:0;background:#07090c;color:#e6e8eb;font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
@@ -25,7 +25,8 @@ a.button{display:inline-block;margin-top:1.25rem;padding:.8rem 1.4rem;border-rad
 <p>Bağlantı yalnızca birkaç dakika ve bir kez geçerlidir. Süresi dolduysa Hub'ın bilgisayarından yeni bir QR iste.</p>
 </section>
 <section id="missing" hidden>
-<p>Orion uygulaması bu telefonda yüklü değil. Uygulamayı yükleyip bilgisayardaki QR'ı uygulamayla okut ya da yeni bir bağlantı iste.</p>
+<p>Orion uygulaması bu telefonda yüklü değil. Uygulamayı yükle, sonra bu bağlantıya yeniden dokun; süresi dolduysa bilgisayardaki QR'ı uygulamayla okut.</p>
+<a class="button" id="store" href="https://play.google.com/store/apps/details?id=com.lonelyfrog.orionai">Google Play'den yükle</a>
 </section>
 <section id="desktop" hidden>
 <p>Bu bağlantı telefon içindir: telefonunda aç ya da Hub'ın bilgisayarındaki QR'ı Orion uygulamasıyla okut.</p>
@@ -41,7 +42,11 @@ a.button{display:inline-block;margin-top:1.25rem;padding:.8rem 1.4rem;border-rad
   var show = function (id) { document.getElementById(id).hidden = false; };
   if (location.hash) history.replaceState(null, '', location.pathname + location.search);
   // Android comes back here without the "#" part when the app is not installed.
-  if (/[?&]app=missing/.test(location.search)) return show('missing');
+  if (/[?&]app=missing/.test(location.search)) {
+    // Inside Android the Play app opens straight to Orion; elsewhere the web store does.
+    if (/Android/i.test(navigator.userAgent)) document.getElementById('store').href = 'market://details?id=com.lonelyfrog.orionai';
+    return show('missing');
+  }
   if (!/^[A-Za-z0-9_-]{30,80}$/.test(token)) return show('invalid');
   if (!/Android/i.test(navigator.userAgent)) return show('desktop');
   var fallback = location.origin + location.pathname + '?app=missing';
