@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-XJP+O6nIo4rqDsqppM7UErZg3jyuJmuc3x3RCrp8AUQ='; style-src 'sha256-Iqm7wLQO4FyyB6BKthZvAVm2kwvHgGjmuzlcvDUN6lA='; base-uri 'none'; form-action 'none'">
+<title>Orion · Telefonu bağla</title>
+<style>
+html,body{margin:0;background:#07090c;color:#e6e8eb;font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:30rem;margin:0 auto;padding:3rem 1.25rem}
+h1{font-size:1.4rem;margin:0 0 .75rem}
+p{margin:.5rem 0;color:#b8bec7}
+a.button{display:inline-block;margin-top:1.25rem;padding:.8rem 1.4rem;border-radius:.6rem;background:#2f6feb;color:#fff;text-decoration:none;font-weight:600}
+[hidden]{display:none}
+</style>
+</head>
+<body>
+<main>
+<h1>Orion</h1>
+<section id="open" hidden>
+<p>Bu bağlantı telefonunu Orion Hub'a bağlar. Orion uygulaması açılmadıysa aşağıdaki düğmeye dokun.</p>
+<a class="button" id="app" href="#">Orion uygulamasında aç</a>
+<p>Bağlantı yalnızca birkaç dakika ve bir kez geçerlidir. Süresi dolduysa Hub'ın bilgisayarından yeni bir QR iste.</p>
+</section>
+<section id="missing" hidden>
+<p>Orion uygulaması bu telefonda yüklü değil. Uygulamayı yükleyip bilgisayardaki QR'ı uygulamayla okut ya da yeni bir bağlantı iste.</p>
+</section>
+<section id="desktop" hidden>
+<p>Bu bağlantı telefon içindir: telefonunda aç ya da Hub'ın bilgisayarındaki QR'ı Orion uygulamasıyla okut.</p>
+</section>
+<section id="invalid" hidden>
+<p>Bu bağlantı eksik veya bozuk. Hub'ın bilgisayarından yeni bir QR ya da bağlantı iste.</p>
+</section>
+</main>
+<script>
+(function () {
+  // The pairing after "#" never reaches this site's server; it goes only to the Orion app.
+  var token = location.hash.slice(1);
+  var show = function (id) { document.getElementById(id).hidden = false; };
+  if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+  if (!/^[A-Za-z0-9_-]{30,80}$/.test(token)) return show('invalid');
+  if (/[?&]app=missing/.test(location.search)) return show('missing');
+  if (!/Android/i.test(navigator.userAgent)) return show('desktop');
+  var fallback = location.origin + location.pathname + '?app=missing';
+  var intent = 'intent://pair?l=' + token + '#Intent;scheme=orion;package=com.lonelyfrog.orionai;S.browser_fallback_url=' +
+      encodeURIComponent(fallback) + ';end';
+  document.getElementById('app').href = intent;
+  show('open');
+  location.href = intent;
+})();
+</script>
+</body>
+</html>

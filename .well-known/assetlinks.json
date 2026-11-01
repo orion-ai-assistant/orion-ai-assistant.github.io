@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.lonelyfrog.orionai",
+      "sha256_cert_fingerprints": [
+        "5A:79:17:14:0B:91:D4:3A:A2:38:57:D7:F5:C6:F2:0C:0C:BC:6D:3C:D0:C8:1A:7D:70:5A:DC:93:BC:57:AD:C9"
+      ]
+    }
+  }
+]
