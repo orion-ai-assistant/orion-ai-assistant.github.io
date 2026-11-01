@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="referrer" content="no-referrer">
 <meta name="robots" content="noindex">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-XJP+O6nIo4rqDsqppM7UErZg3jyuJmuc3x3RCrp8AUQ='; style-src 'sha256-Iqm7wLQO4FyyB6BKthZvAVm2kwvHgGjmuzlcvDUN6lA='; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-hMPcfRJmuGeG6pHKd2TP3OilRl8do+qeaNf+27LEbHU='; style-src 'sha256-Iqm7wLQO4FyyB6BKthZvAVm2kwvHgGjmuzlcvDUN6lA='; base-uri 'none'; form-action 'none'">
 <title>Orion · Telefonu bağla</title>
 <style>
 html,body{margin:0;background:#07090c;color:#e6e8eb;font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
@@ -40,8 +40,9 @@ a.button{display:inline-block;margin-top:1.25rem;padding:.8rem 1.4rem;border-rad
   var token = location.hash.slice(1);
   var show = function (id) { document.getElementById(id).hidden = false; };
   if (location.hash) history.replaceState(null, '', location.pathname + location.search);
-  if (!/^[A-Za-z0-9_-]{30,80}$/.test(token)) return show('invalid');
+  // Android comes back here without the "#" part when the app is not installed.
   if (/[?&]app=missing/.test(location.search)) return show('missing');
+  if (!/^[A-Za-z0-9_-]{30,80}$/.test(token)) return show('invalid');
   if (!/Android/i.test(navigator.userAgent)) return show('desktop');
   var fallback = location.origin + location.pathname + '?app=missing';
   var intent = 'intent://pair?l=' + token + '#Intent;scheme=orion;package=com.lonelyfrog.orionai;S.browser_fallback_url=' +
